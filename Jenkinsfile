@@ -38,10 +38,12 @@ pipeline {
         }  
         stage('Deploy using K8s') {
             steps {
+                withCredentials([string(credentialsId: 'K8s-secret', variable: '')]) {
                 sh  'sudo kubectl apply -f kubernetesfile.yml'
                 sh 'sudo kubectl get all'
                 }
         }  
+        }
                  
     }
 }    
