@@ -38,8 +38,8 @@ pipeline {
         }  
         stage('Deploy using K8s') {
             steps {
-                sh 'sudo kubectl apply -f deployment kubernetesfile.yml'
-                sh 'sudo kubectl get all'
+                sh  'kubectl apply -f deployment kubernetesfile.yml'
+                sh 'kubectl get all'
                 }
         }  
                  
