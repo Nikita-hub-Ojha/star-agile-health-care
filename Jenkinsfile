@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/rony1993-devops/project2.git'
+                git 'https://github.com/Nikita-hub-Ojha/star-agile-health-care.git'
             }
         }
 
