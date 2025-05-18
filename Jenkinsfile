@@ -36,6 +36,12 @@ pipeline {
                 sh 'docker push nikitaojha/staragileprojecthealthcare:v1'
             }
         }  
+        stage('Deploy using K8s') {
+            steps {
+                sh 'sudo kubectl apply -f deployment kubernetesfile.yml'
+                sh 'sudo kubectl get all'
+                }
+        }  
                  
     }
 }    
