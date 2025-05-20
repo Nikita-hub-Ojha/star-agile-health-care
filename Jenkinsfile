@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+     environment {
+         DOCKER_IMAGE = 'nikitaojha/staragileprojecthealthcare:v1'
+         EKS_CLUSTER_NAME = 'capstone-eks'
+         AWS_REGION = 'us-east-1'
+     }
+
     stages {
         stage('Clone Repository') {
             steps {
@@ -35,15 +41,38 @@ pipeline {
             steps {
                 sh 'docker push nikitaojha/staragileprojecthealthcare:v1'
             }
-        }  
-        stage('Deploy using K8s') {
-            steps {
-                withCredentials([string(credentialsId: 'K8s-secret', variable: '')]) {
-                sh  ' kubectl apply -f kubernetesfile.yml'
-                sh ' kubectl get all'
-                }
-        }  
         }
-                 
+        stage('Deploy to k8sr') {
+            steps {
+                script {
+                    sh '''
+                    echo "Verifying AWS credentials..."
+                    aws sts get-caller-identity
+
+                    echo "Configuring kubectl for EKS cluster..."
+                    aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+
+                    echo "Verifying kubeconfig..."
+                    kubectl config view
+
+                    echo "Deploying application to EKS..."
+                    kubectl apply -f kubernetesfile.yml
+                    
+
+                    echo "Verifying deployment..."
+                    kubectl get pods
+                    kubectl get svc
+                    '''
+                }
+            }
+        }
+          
+
+
+           
+           
+    
+                  
     }
 }    
+         
